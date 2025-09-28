@@ -10,7 +10,6 @@ permissions:
   id-token: write
 
 jobs:
-  # İŞİN ADI 'build-and-deploy' YERİNE 'build' OLARAK DÜZELTİLDİ
   build:
     runs-on: ubuntu-latest
     steps:
@@ -22,8 +21,9 @@ jobs:
         with:
           dotnet-version: 6.0.x # Projen .NET 7 veya 8 ise burayı değiştir
 
+      # PROJE YOLU BURADA DÜZELTİLDİ
       - name: Publish .NET Project
-        run: dotnet publish FlappyBirdBlazor.csproj -c Release -o release --nologo
+        run: dotnet publish FlappyBirdBlazor/FlappyBirdBlazor.csproj -c Release -o release --nologo
       
       - name: Rewrite base href
         uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
@@ -37,7 +37,6 @@ jobs:
           path: 'release/wwwroot'
 
   deploy:
-    # Artık 'build' adında bir işi bulabileceği için hata vermeyecek
     needs: build
     runs-on: ubuntu-latest
     environment:
