@@ -1,0 +1,148 @@
+﻿@page "/"
+@using FlappyBirdBlazor.Models
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Flappy Bird v2</PageTitle>
+
+<div @onkeydown="HandleKeyPress" @onclick="HandleClick" tabindex="0">
+    <canvas @ref="gameCanvas" id="gameCanvas" width="288" height="512"></canvas>
+</div>
+
+<div class="performance-note">
+    <strong>Performans Notu:</strong> En akıcı oyun deneyimi için, uygulamanın düşük güç modunda olmayan bir cihazda çalıştırılması tavsiye edilir.
+</div>
+
+@code {
+    private ElementReference gameCanvas;
+
+    // --- C# OYUN DURUMU ---
+    private GameState gameState = GameState.Start;
+    private Bird bird = new Bird();
+    private List<Pipe> pipes = new List<Pipe>();
+    private int score = 0;
+    private int frame = 0;
+    private double bgX1 = 0;
+    private double bgX2 = 288;
+
+
+    // --- AYARLAR ---
+    private readonly double pipeSpeed = 2.1;
+    private readonly double pipeGap = 130;
+    private readonly int pipeInterval = 120;
+    private readonly double backgroundSpeed = 0.75;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("gameInterop.loadImages", new
+            {
+                bird = "images/bird.png",
+                background = "images/background.png",
+                pipe = "images/pipe.png"
+            });
+            await JSRuntime.InvokeVoidAsync("gameInterop.initCanvas", gameCanvas);
+            _ = GameLoop();
+        }
+    }
+
+    private async Task GameLoop()
+    {
+        while (true)
+        {
+            if (gameState == GameState.Playing)
+            {
+                Update();
+                CheckCollisions();
+            }
+            await JSRuntime.InvokeVoidAsync("gameInterop.renderGame", GetCurrentGameState());
+            await Task.Delay(16);
+        }
+    }
+
+    private object GetCurrentGameState()
+    {
+        return new
+        {
+            Bird = new { bird.X, bird.Y, bird.Width, bird.Height },
+            Pipes = pipes.Select(p => new { p.X, p.Y, p.Width, p.Height }),
+            Score = score,
+            PipeGap = pipeGap,
+            CurrentState = (int)gameState,
+            BgX1 = bgX1,
+            BgX2 = bgX2
+        };
+    }
+
+    private void Update()
+    {
+        bird.Update();
+        frame++;
+
+        bgX1 -= backgroundSpeed;
+        bgX2 -= backgroundSpeed;
+        if (bgX1 <= -288) bgX1 = 288;
+        if (bgX2 <= -288) bgX2 = 288;
+
+        if (frame % pipeInterval == 0)
+        {
+            double pipeY = new Random().Next(75, (int)(288 - pipeGap));
+            pipes.Add(new Pipe(288, 512, pipeY));
+        }
+
+        foreach (var pipe in pipes)
+        {
+            pipe.Update(pipeSpeed);
+            if (pipe.X + pipe.Width < bird.X && !pipe.Passed)
+            {
+                score++;
+                pipe.Passed = true;
+            }
+        }
+        pipes.RemoveAll(p => p.X + p.Width < 0);
+    }
+
+    private void CheckCollisions()
+    {
+        if (bird.Y + bird.Height > 512 || bird.Y < 0)
+        {
+            gameState = GameState.GameOver;
+        }
+        foreach (var pipe in pipes)
+        {
+            if (bird.X < pipe.X + pipe.Width && bird.X + bird.Width > pipe.X &&
+                (bird.Y < pipe.Y || bird.Y + bird.Height > pipe.Y + pipeGap))
+            {
+                gameState = GameState.GameOver;
+            }
+        }
+    }
+
+    private void RestartGame()
+    {
+        bird = new Bird();
+        pipes.Clear();
+        score = 0;
+        frame = 0;
+        bgX1 = 0;
+        bgX2 = 288;
+        gameState = GameState.Playing;
+    }
+
+    private void HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Code == "Space")
+        {
+            if (gameState == GameState.Start) { gameState = GameState.Playing; }
+            if (gameState == GameState.Playing) { bird.Jump(); }
+        }
+    }
+
+    private void HandleClick()
+    {
+        if (gameState == GameState.GameOver) { RestartGame(); }
+    }
+
+    public enum GameState { Start, Playing, GameOver }
+}
