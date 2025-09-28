@@ -14,14 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # v3 -> v4
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4 # v3 -> v4
         with:
           dotnet-version: 6.0.x # Projen .NET 7 veya 8 ise burayı değiştir
 
-      # PROJE YOLU BURADA DÜZELTİLDİ
       - name: Publish .NET Project
         run: dotnet publish FlappyBirdBlazor/FlappyBirdBlazor.csproj -c Release -o release --nologo
       
@@ -32,7 +31,7 @@ jobs:
           base_href: '/FlappyBirdBlazor/'
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v3 # v2 -> v3
         with:
           path: 'release/wwwroot'
 
@@ -45,4 +44,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4 # v2 -> v4
