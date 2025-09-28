@@ -1,0 +1,49 @@
+name: Deploy Blazor WASM to GitHub Pages
+
+on:
+  push:
+    branches: [ main ] # Sadece main dalına kod gönderildiğinde çalışır
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x # Projen .NET 7 veya 8 ise burayı değiştir
+
+      # Blazor projesini yayınlanmaya hazır hale getirir
+      - name: Publish .NET Project
+        run: dotnet publish FlappyBirdBlazor.csproj -c Release -o release --nologo
+
+      # GitHub Pages'in doğru çalışması için base path'i ayarlar
+      - name: Rewrite base href
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+        with:
+          html_path: 'release/wwwroot/index.html'
+          base_href: '/FlappyBirdBlazor/'
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: 'release/wwwroot'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
