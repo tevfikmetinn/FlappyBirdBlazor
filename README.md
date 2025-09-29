@@ -12,7 +12,7 @@ Bu proje, Nesne Tabanlı Programlama dersi kapsamında geliştirilen ilk Flappy 
 
 ## Projenin Amacı ve Öğrenme Süreci
 
-İlk projede C# dilini bir web sunucusu (backend) olarak kullanıp oyun mantığını JavaScript ile geliştirdikten sonra, bu projede kendime bir meydan okuma belirledim: **Oyunun tamamını, tarayıcıda çalışan C# kodu ile yazmak.** Bu proje, bu hedefe ulaşma ve bu süreçte öğrendiklerimin bir dökümantasyonudur.
+İlk projede C# dilini bir web sunucusu (backend) olarak kullanıp oyun mantığını JavaScript ile geliştirdikten sonra, bu projede kendime bir meydan okuma belirledim: **Oyunun tamamını, tarayıcıda çalışan C# kodu ile yazmak.** Bu proje, bu hedefe ulaşma ve bu süreçte öğrendiklerimin dökümantasyonudur.
 
 ### Bu Projede Neler Öğrendim?
 
