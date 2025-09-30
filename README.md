@@ -1,4 +1,4 @@
-# Flappy Bird v2: Tamamen C# ve Blazor ile Geliştirilmiş Versiyon
+# Flappy Bird v2: C# ve Blazor ile Geliştirilmiş Versiyon
 
 Bu proje, Nesne Tabanlı Programlama dersi kapsamında geliştirilen ilk Flappy Bird prototipinin, modern bir C# teknolojisi olan **Blazor WebAssembly** kullanılarak tamamen C# dilinde yeniden yazılmış versiyonudur.
 
