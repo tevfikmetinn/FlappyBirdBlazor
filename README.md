@@ -3,16 +3,15 @@
 Bu proje, Nesne Tabanlı Programlama dersi kapsamında geliştirilen ilk Flappy Bird prototipinin, modern bir C# teknolojisi olan **Blazor WebAssembly** kullanılarak tamamen C# dilinde yeniden yazılmış versiyonudur.
 
 ## Oynanış Gifi
+![Image](https://github.com/user-attachments/assets/b302e579-f6b2-498b-b3e5-f00e05ff5e5d)
 
 ## Canlı Demo
 
-**[Oyunun Canlı Demosuna Buradan Ulaşabilirsiniz!](YAKINDA-EKLENECEK)**
+**[Oyunun Canlı Demosuna Buradan Ulaşabilirsiniz!](https://tevfikmetinn.github.io/FlappyBirdBlazor/)**
 
 ---
 
-## Projenin Amacı ve Öğrenme Süreci
 
-İlk projede C# dilini bir web sunucusu (backend) olarak kullanıp oyun mantığını JavaScript ile geliştirdikten sonra, bu projede kendime bir meydan okuma belirledim: **Oyunun tamamını, tarayıcıda çalışan C# kodu ile yazmak.** Bu proje, bu hedefe ulaşma ve bu süreçte öğrendiklerimin dökümantasyonudur.
 
 ### Bu Projede Neler Öğrendim?
 
